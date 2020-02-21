@@ -51,7 +51,7 @@ class EnviroReading:
         self.output_dict = {
             'timestamp' : time.time(),
             'script_version' : '0.0.1',
-            'device_name' : os.environ['DEVICE_NAME']
+            'device_name' : 'my_device'
         }
 
     def generate_output(self):
