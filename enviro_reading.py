@@ -52,55 +52,46 @@ class EnviroReading:
         # Define output
         self.output_dict = {
             'timestamp' : time.time(),
-            'script_version' : '0.0.1'
+            'script_version' : '0.0.1',
+            'device_name' : os.environ['DEVICE_NAME']
         }
 
     def generate_output(self):
         if self.__variables['temp']: 
-            self.output_dict['temp'] = {}
-            self.output_dict['temp']['value'] = self.bme280.get_temperature()
-            self.output_dict['temp']['unit'] = 'C'
+            self.output_dict['temp_value'] = self.bme280.get_temperature()
+            self.output_dict['temp_unit'] = 'C'
         if self.__variables['pressure']:
-            self.output_dict['pressure'] = {}
-            self.output_dict['pressure']['value'] = self.bme280.get_pressure()
-            self.output_dict['pressure']['unit'] = 'hPa'
+            self.output_dict['pressure_value'] = self.bme280.get_pressure()
+            self.output_dict['pressure_unit'] = 'hPa'
         if self.__variables['humidity']:
-            self.output_dict['humidity'] = {}
-            self.output_dict['humidity']['value'] = self.bme280.get_humidity()
-            self.output_dict['humidity']['unit'] = '%'
+            self.output_dict['humidity_value'] = self.bme280.get_humidity()
+            self.output_dict['humidity_unit'] = '%'
         if self.__variables['light']:
             proximity = ltr559.get_proximity()
             if proximity < 10:
                 light_value = self.ltr559.get_lux()
             else:
                 light_value = 1
-            self.output_dict['light'] = {}
-            self.output_dict['light']['value'] = light_value
-            self.output_dict['light']['unit'] = 'Lux'
+            self.output_dict['light_value'] = light_value
+            self.output_dict['light_unit'] = 'Lux'
         if self.__variables['oxidised']:
-            self.output_dict['oxidised'] = {}
-            self.output_dict['oxidised']['value'] = self.gas_data.oxidising / 1000
-            self.output_dict['oxidised']['unit'] = 'kO'
+            self.output_dict['oxidised_value'] = self.gas_data.oxidising / 1000
+            self.output_dict['oxidised_unit'] = 'kO'
         if self.__variables['reduced']:
-            self.output_dict['reduced'] = {}
-            self.output_dict['reduced']['value'] = self.gas_data.reducing / 1000
-            self.output_dict['reduced']['unit'] = 'kO'
+            self.output_dict['reduced_value'] = self.gas_data.reducing / 1000
+            self.output_dict['reduced_unit'] = 'kO'
         if self.__variables['nh3']:
-            self.output_dict['nh3'] = {}
-            self.output_dict['nh3']['value'] = self.gas_data.nh3 / 1000
-            self.output_dict['nh3']['unit'] = 'kO'
+            self.output_dict['nh3_value'] = self.gas_data.nh3 / 1000
+            self.output_dict['nh3_unit'] = 'kO'
         if self.__variables['pm1']:
-            self.output_dict['pm1'] = {}
-            self.output_dict['pm1']['value'] = float(self.pms5003.read().pm_ug_per_m3(1.0))
-            self.output_dict['pm1']['unit'] = 'ug/m3'
+            self.output_dict['pm1_value'] = float(self.pms5003.read().pm_ug_per_m3(1.0))
+            self.output_dict['pm1_unit'] = 'ug/m3'
         if self.__variables['pm25']:
-            self.output_dict['pm25'] = {}
-            self.output_dict['pm25']['value'] = float(self.pms5003.read().pm_ug_per_m3(2.5))
-            self.output_dict['pm25']['unit'] = 'ug/m3'
+            self.output_dict['pm25_value'] = float(self.pms5003.read().pm_ug_per_m3(2.5))
+            self.output_dict['pm25_unit'] = 'ug/m3'
         if self.__variables['pm10']:
-            self.output_dict['pm10'] = {}
-            self.output_dict['pm10']['value'] = float(self.pms5003.read().pm_ug_per_m3(10))
-            self.output_dict['pm10']['unit'] = 'ug/m3'
+            self.output_dict['pm10_value'] = float(self.pms5003.read().pm_ug_per_m3(10))
+            self.output_dict['pm10_unit'] = 'ug/m3'
         return self.output_dict
 
     def output_json(self):
