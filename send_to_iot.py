@@ -113,14 +113,21 @@ if args.mode == 'both' or args.mode == 'subscribe':
     myAWSIoTMQTTClient.subscribe(topic, 1, customCallback)
 time.sleep(2)
 
+# Open error log
+logf = open("errors.log", "w")
+
 # Publish to the same topic in a loop forever
 loopCount = 0
 while True:
     if args.mode == 'both' or args.mode == 'publish':
-        enviro_reading = EnviroReading()
-        messageJson = enviro_reading.output_json()
-        myAWSIoTMQTTClient.publish(topic, messageJson, 1)
-        if args.mode == 'publish':
-            print('Published topic %s: %s\n' % (topic, messageJson))
-        loopCount += 1
+        try:
+            enviro_reading = EnviroReading()
+            messageJson = enviro_reading.output_json()
+            myAWSIoTMQTTClient.publish(topic, messageJson, 1)
+            if args.mode == 'publish':
+                print('Published topic %s: %s\n' % (topic, messageJson))
+            loopCount += 1
+        except:
+            logf.write("Failure: {}\n".format(str(e)))
+            pass
     time.sleep(freq)
