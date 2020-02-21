@@ -125,7 +125,7 @@ enviro_reading = EnviroReading()
 while True:
     if args.mode == 'both' or args.mode == 'publish':
         try:
-            messageJson = enviro_reading.generate_output().output_json()
+            messageJson = enviro_reading.output_json()
             myAWSIoTMQTTClient.publish(topic, messageJson, 1)
             if args.mode == 'publish':
                 print('Published topic %s: %s\n' % (topic, messageJson))
