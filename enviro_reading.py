@@ -49,12 +49,12 @@ class EnviroReading:
 
         # Define output
         self.output_dict = {
-            'timestamp' : time.time(),
             'script_version' : '0.0.1',
             'device_name' : 'my_device'
         }
 
     def generate_output(self):
+        self.output_dict['timestamp'] = time.time()
         if self.__variables['temp']: 
             self.output_dict['temp_value'] = self.bme280.get_temperature()
             self.output_dict['temp_unit'] = 'C'
