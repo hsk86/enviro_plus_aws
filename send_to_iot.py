@@ -20,7 +20,7 @@ import logging
 import time
 import argparse
 import json
-from .EnviroReading import EnviroReading
+from enviro_reading import EnviroReading
 
 AllowedActions = ['both', 'publish', 'subscribe']
 
@@ -49,6 +49,8 @@ parser.add_argument("-m", "--mode", action="store", dest="mode", default="both",
                     help="Operation modes: %s"%str(AllowedActions))
 parser.add_argument("-M", "--message", action="store", dest="message", default="Hello World!",
                     help="Message to publish")
+parser.add_argument("-f", "--frequency", action="store", dest="frequency", default=15,
+                    help="Frequency (in seconds)")                 
 
 args = parser.parse_args()
 host = args.host
@@ -59,6 +61,7 @@ port = args.port
 useWebsocket = args.useWebsocket
 clientId = args.clientId
 topic = args.topic
+freq = args.frequency
 
 if args.mode not in AllowedActions:
     parser.error("Unknown --mode option %s. Must be one of %s" % (args.mode, str(AllowedActions)))
@@ -120,4 +123,4 @@ while True:
         if args.mode == 'publish':
             print('Published topic %s: %s\n' % (topic, messageJson))
         loopCount += 1
-    time.sleep(15)
+    time.sleep(freq)

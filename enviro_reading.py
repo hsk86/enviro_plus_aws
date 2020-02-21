@@ -12,6 +12,10 @@ try:
     ltr559 = LTR559()
 except ImportError:
     import ltr559
+try:
+    from smbus2 import SMBus
+except ImportError:
+    from smbus import SMBus
 
 
 class EnviroReading:
@@ -31,7 +35,13 @@ class EnviroReading:
 
         # Pre-load sensor packages
         if (self.__variables['temp'] or self.__variables['pressure'] or self.__variables['humidity']):
-            self.bme280 = BME280()
+            bus = SMBus(1)
+            self.bme280 = BME280(i2c_dev=bus)
+            # Take initial reading then allow time to get it to 
+            self.init_temp_reading = self.bme280.get_temperature()
+            self.init_pressure = self.bme280.get_pressure()
+            self.init_humidity = self.bme280.get_humidity()
+            time.sleep(1)
         if self.__variables['light']:
             self.ltr559 = LTR559()
         if (self.__variables['pm1'] or self.__variables['pm25'] or self.__variables['pm10']):
@@ -44,27 +54,6 @@ class EnviroReading:
             'timestamp' : time.time(),
             'script_version' : '0.0.1'
         }
-
-    def get_temperature(self):
-        with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
-            temp = f.read()
-            temp = int(temp) / 1000.0
-        factor = 0.8
-        cpu_temps = [temp] * 5
-
-        cpu_temp = temp
-        # Smooth out with some averaging to decrease jitter
-        cpu_temps = cpu_temps[1:] + [cpu_temp]
-        avg_cpu_temp = sum(cpu_temps) / float(len(cpu_temps))
-        raw_temp = self.bme280.get_temperature()
-        output_temp = raw_temp - ((avg_cpu_temp - raw_temp) / factor)
-        return output_temp
-    
-    def get_humidity(self):
-        if self.__variables['humidity']:
-            return "Humidity: {}".format(self.bme280.get_humidity())
-        else:
-            return "There is no humidity"
 
     def generate_output(self):
         if self.__variables['temp']: 
