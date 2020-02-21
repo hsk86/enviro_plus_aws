@@ -131,6 +131,7 @@ while True:
                 print('Published topic %s: %s\n' % (topic, messageJson))
             loopCount += 1
         except Exception as e:
+            print(e)
             logf.write("Failure: {}\n".format(str(e)))
         finally:
             pass
