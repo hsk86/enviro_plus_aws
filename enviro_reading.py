@@ -46,8 +46,6 @@ class EnviroReading:
             self.ltr559 = LTR559()
         if (self.__variables['pm1'] or self.__variables['pm25'] or self.__variables['pm10']):
             self.pms5003 = PMS5003()
-        if (self.__variables['oxidised'] or self.__variables['reduced'] or self.__variables['nh3']):
-            self.gas_data = gas.read_all()
 
         # Define output
         self.output_dict = {
@@ -75,13 +73,13 @@ class EnviroReading:
             self.output_dict['light_value'] = light_value
             self.output_dict['light_unit'] = 'Lux'
         if self.__variables['oxidised']:
-            self.output_dict['oxidised_value'] = self.gas_data.oxidising / 1000
+            self.output_dict['oxidised_value'] = gas.read_all().oxidising / 1000
             self.output_dict['oxidised_unit'] = 'kO'
         if self.__variables['reduced']:
-            self.output_dict['reduced_value'] = self.gas_data.reducing / 1000
+            self.output_dict['reduced_value'] = gas.read_all().reducing / 1000
             self.output_dict['reduced_unit'] = 'kO'
         if self.__variables['nh3']:
-            self.output_dict['nh3_value'] = self.gas_data.nh3 / 1000
+            self.output_dict['nh3_value'] = gas.read_all().nh3 / 1000
             self.output_dict['nh3_unit'] = 'kO'
         if self.__variables['pm1']:
             self.output_dict['pm1_value'] = float(self.pms5003.read().pm_ug_per_m3(1.0))
